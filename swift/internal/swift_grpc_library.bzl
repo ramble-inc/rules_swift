@@ -111,29 +111,29 @@ def _register_grpcswift_generate_action(
         protoc_plugin_executable,
         format = "--plugin=protoc-gen-swiftgrpc=%s",
     )
-    protoc_args.add(generated_dir_path, format = "--swiftgrpc_out=%s")
-    protoc_args.add("--swiftgrpc_opt=Visibility=Public")
+    protoc_args.add(generated_dir_path, format = "--grpc-swift_out=%s")
+    protoc_args.add("--grpc-swift_opt=Visibility=Public")
     if flavor == "client":
-        protoc_args.add("--swiftgrpc_opt=Client=true")
-        protoc_args.add("--swiftgrpc_opt=Server=false")
+        protoc_args.add("--grpc-swift_opt=Client=true")
+        protoc_args.add("--grpc-swift_opt=Server=false")
     elif flavor == "client_stubs":
-        protoc_args.add("--swiftgrpc_opt=Client=true")
-        protoc_args.add("--swiftgrpc_opt=Server=false")
-        protoc_args.add("--swiftgrpc_opt=TestStubs=true")
-        protoc_args.add("--swiftgrpc_opt=Implementations=false")
+        protoc_args.add("--grpc-swift_opt=Client=true")
+        protoc_args.add("--grpc-swift_opt=Server=false")
+        protoc_args.add("--grpc-swift_opt=TestStubs=true")
+        protoc_args.add("--grpc-swift_opt=Implementations=false")
     elif flavor == "server":
-        protoc_args.add("--swiftgrpc_opt=Client=false")
-        protoc_args.add("--swiftgrpc_opt=Server=true")
+        protoc_args.add("--grpc-swift_opt=Client=false")
+        protoc_args.add("--grpc-swift_opt=Server=true")
     else:
         fail("Unsupported swift_grpc_library flavor", attr = "flavor")
     protoc_args.add_all(
         extra_module_imports,
-        format_each = "--swiftgrpc_opt=ExtraModuleImports=%s",
+        format_each = "--grpc-swift_opt=ExtraModuleImports=%s",
     )
     if module_mapping_file:
         protoc_args.add(
             module_mapping_file,
-            format = "--swiftgrpc_opt=ProtoPathModuleMappings=%s",
+            format = "--grpc-swift_opt=ProtoPathModuleMappings=%s",
         )
     protoc_args.add("--descriptor_set_in")
     protoc_args.add_joined(transitive_descriptor_sets, join_with = ":")

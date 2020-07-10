@@ -1,0 +1,122 @@
+load(
+    "@build_bazel_rules_swift//swift:swift.bzl",
+    "swift_library",
+)
+load(
+    "@rules_cc//cc:defs.bzl",
+    "cc_library",
+)
+
+cc_library(
+    name="CNIOAtomics",
+    srcs=glob([
+        "Sources/CNIOAtomics/**/*.c",
+    ]),
+    hdrs=glob([
+        "Sources/CNIOAtomics/**/*.h",
+    ]),
+    tags=["swift_module=CNIOAtomics"],
+    visibility=["//visibility:public"],
+)
+
+cc_library(
+    name="CNIOLinux",
+    srcs=glob([
+        "Sources/CNIOLinux/**/*.c",
+    ]),
+    hdrs=glob([
+        "Sources/CNIOLinux/**/*.h",
+    ]),
+    tags=["swift_module=CNIOLinux"],
+    visibility=["//visibility:public"],
+)
+
+cc_library(
+    name="CNIODarwin",
+    srcs=glob([
+        "Sources/CNIODarwin/**/*.c",
+    ]),
+    hdrs=glob([
+        "Sources/CNIODarwin/**/*.h",
+    ]),
+    tags=["swift_module=CNIODarwin"],
+    visibility=["//visibility:public"],
+)
+
+cc_library(
+    name="CNIOHTTPParser",
+    srcs=glob([
+        "Sources/CNIOHTTPParser/**/*.c",
+    ]),
+    hdrs=glob([
+        "Sources/CNIOHTTPParser/**/*.h",
+    ]),
+    tags=["swift_module=CNIOHTTPParser"],
+    visibility=["//visibility:public"],
+)
+
+swift_library(
+    name="NIOConcurrencyHelpers",
+    srcs=glob([
+        "Sources/NIOConcurrencyHelpers/*.swift",
+    ]),
+    module_name="NIOConcurrencyHelpers",
+    visibility=["//visibility:public"],
+    deps=[
+        ":CNIOAtomics",
+    ],
+    copts=["-DSWIFT_PACKAGE"],
+)
+
+swift_library(
+    name="NIO",
+    srcs=glob([
+        "Sources/NIO/*.swift",
+    ]),
+    module_name="NIO",
+    visibility=["//visibility:public"],
+    deps=[
+        ":NIOConcurrencyHelpers",
+        ":CNIOLinux",
+        ":CNIODarwin",
+    ],
+    copts=["-DSWIFT_PACKAGE"],
+)
+
+swift_library(
+    name="NIOHTTP1",
+    srcs=glob([
+        "Sources/NIOHTTP1/*.swift",
+    ]),
+    module_name="NIOHTTP1",
+    visibility=["//visibility:public"],
+    deps=[
+        ":NIO",
+        ":CNIOHTTPParser",
+    ],
+    copts=["-DSWIFT_PACKAGE"],
+)
+
+swift_library(
+    name="NIOTLS",
+    srcs=glob([
+        "Sources/NIOTLS/*.swift",
+    ]),
+    module_name="NIOTLS",
+    visibility=["//visibility:public"],
+    deps=[
+        ":NIO",
+    ],
+)
+
+swift_library(
+    name="NIOFoundationCompat",
+    srcs=glob([
+        "Sources/NIOFoundationCompat/*.swift",
+    ]),
+    module_name="NIOFoundationCompat",
+    visibility=["//visibility:public"],
+    deps=[
+        ":NIO",
+    ],
+)

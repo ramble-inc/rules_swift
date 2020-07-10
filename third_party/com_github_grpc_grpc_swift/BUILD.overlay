@@ -3,65 +3,52 @@ load(
     "swift_binary",
     "swift_library",
 )
+load(
+    "@rules_cc//cc:defs.bzl",
+    "cc_library",
+)
+
+cc_library(
+    name="CGRPCZlib",
+    srcs=glob([
+        "Sources/CGRPCZlib/**/*.{swift,c,h,cc,S}",
+    ]),
+    hdrs=glob([
+        "Sources/CGRPCZlib/include/*.h",
+    ]),
+    tags=["swift_module=CGRPCZlib"],
+    visibility=["//visibility:public"],
+)
+
 
 swift_library(
-    name = "SwiftGRPC",
-    srcs = glob([
-        "Sources/SwiftGRPC/**/*.swift",
+    name="SwiftGRPC",
+    srcs=glob([
+        "Sources/GRPC/**/*.swift",
     ]),
-    copts = ["-DSWIFT_PACKAGE"],  # activates CgRPC imports
-    module_name = "SwiftGRPC",
-    visibility = ["//visibility:public"],
-    deps = [
-        ":CgRPC",
+    module_name="GRPC",
+    visibility=["//visibility:public"],
+    deps=[
+        ":CGRPCZlib",
         "@com_github_apple_swift_protobuf//:SwiftProtobuf",
-    ],
-)
-
-cc_library(
-    name = "BoringSSL",
-    srcs = glob([
-        "Sources/BoringSSL/crypto/**/*.c",
-        "Sources/BoringSSL/crypto/**/*.h",
-        "Sources/BoringSSL/ssl/**/*.c",
-        "Sources/BoringSSL/ssl/**/*.cc",
-        "Sources/BoringSSL/ssl/**/*.h",
-        "Sources/BoringSSL/third_party/**/*.c",
-        "Sources/BoringSSL/third_party/**/*.h",
-    ]),
-    hdrs = glob(["Sources/BoringSSL/include/**/*.h"]),
-    copts = ["-Wno-unused-function"],
-    includes = ["Sources/BoringSSL/include"],
-)
-
-cc_library(
-    name = "CgRPC",
-    srcs = glob([
-        "Sources/CgRPC/include/**/*.h",
-        "Sources/CgRPC/shim/*.c",
-        "Sources/CgRPC/src/**/*.c",
-        "Sources/CgRPC/src/**/*.cc",
-        "Sources/CgRPC/src/**/*.h",
-        "Sources/CgRPC/third_party/nanopb/**/*.c",
-        "Sources/CgRPC/third_party/nanopb/**/*.h",
-    ]) + ["Sources/CgRPC/shim/internal.h"],
-    hdrs = ["Sources/CgRPC/shim/cgrpc.h"],
-    copts = ["-DPB_NO_PACKED_STRUCTS=1"],
-    includes = ["Sources/CgRPC/include"],
-    tags = ["swift_module=CgRPC"],
-    deps = [
-        ":BoringSSL",
-        "@zlib//:zlib",
+        "@com_github_apple_swift_nio//:NIO",
+        "@com_github_apple_swift_nio//:NIOHTTP1",
+        "@com_github_apple_swift_nio//:NIOFoundationCompat",
+        "@com_github_apple_swift_nio_http2//:NIOHPACK",
+        "@com_github_apple_swift_nio_http2//:NIOHTTP2",
+        "@com_github_apple_swift_nio_ssl//:NIOSSL",
+        "@com_github_apple_swift_nio_transport_services//:NIOTransportServices",
+        "@com_github_apple_swift_log//:Logging",
     ],
 )
 
 swift_binary(
-    name = "protoc-gen-swiftgrpc",
-    srcs = glob([
-        "Sources/protoc-gen-swiftgrpc/*.swift",
+    name="protoc-gen-swiftgrpc",
+    srcs=glob([
+        "Sources/protoc-gen-grpc-swift/*.swift",
     ]),
-    visibility = ["//visibility:public"],
-    deps = [
+    visibility=["//visibility:public"],
+    deps=[
         "@com_github_apple_swift_protobuf//:SwiftProtobuf",
         "@com_github_apple_swift_protobuf//:SwiftProtobufPluginLibrary",
     ],

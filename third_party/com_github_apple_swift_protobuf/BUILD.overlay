@@ -5,29 +5,29 @@ load(
 )
 
 swift_library(
-    name = "SwiftProtobuf",
-    srcs = glob([
+    name="SwiftProtobuf",
+    srcs=glob([
         "Sources/SwiftProtobuf/*.swift",
     ]),
-    module_name = "SwiftProtobuf",
-    visibility = ["//visibility:public"],
+    module_name="SwiftProtobuf",
+    visibility=["//visibility:public"],
 )
 
 swift_library(
-    name = "SwiftProtobufPluginLibrary",
-    srcs = glob([
+    name="SwiftProtobufPluginLibrary",
+    srcs=glob([
         "Sources/SwiftProtobufPluginLibrary/*.swift",
     ]),
-    module_name = "SwiftProtobufPluginLibrary",
-    visibility = ["//visibility:public"],
-    deps = [":SwiftProtobuf"],
+    module_name="SwiftProtobufPluginLibrary",
+    visibility=["//visibility:public"],
+    deps=[":SwiftProtobuf"],
 )
 
 swift_binary(
-    name = "ProtoCompilerPlugin",
-    srcs = glob([
+    name="ProtoCompilerPlugin",
+    srcs=glob([
         "Sources/protoc-gen-swift/*.swift",
     ]),
-    visibility = ["//visibility:public"],
-    deps = [":SwiftProtobufPluginLibrary"],
+    visibility=["//visibility:public"],
+    deps=[":SwiftProtobufPluginLibrary"],
 )

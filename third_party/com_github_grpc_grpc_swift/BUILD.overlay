@@ -43,7 +43,7 @@ swift_library(
 )
 
 swift_binary(
-    name="protoc-gen-swiftgrpc",
+    name="protoc-gen-grpc-swift",
     srcs=glob([
         "Sources/protoc-gen-grpc-swift/*.swift",
     ]),

@@ -109,7 +109,7 @@ def _register_grpcswift_generate_action(
 
     protoc_args.add(
         protoc_plugin_executable,
-        format = "--plugin=protoc-gen-swiftgrpc=%s",
+        format = "--plugin=protoc-gen-grpc-swift=%s",
     )
     protoc_args.add(generated_dir_path, format = "--grpc-swift_out=%s")
     protoc_args.add("--grpc-swift_opt=Visibility=Public")
@@ -218,6 +218,12 @@ def _swift_grpc_library_impl(ctx):
         ctx.attr.flavor,
         extra_module_imports,
     )
+    generated_files.extend([
+        file
+        for dep in ctx.attr.deps
+        for file in dep[SwiftProtoInfo].pbswift_files.to_list()
+        if SwiftProtoInfo in dep
+    ])
 
     # Compile the generated Swift sources and produce a static library and a
     # .swiftmodule as outputs. In addition to the other proto deps, we also pass
@@ -365,7 +371,7 @@ The kind of definitions that should be generated:
             "_protoc_gen_swiftgrpc": attr.label(
                 cfg = "host",
                 default = Label(
-                    "@com_github_grpc_grpc_swift//:protoc-gen-swiftgrpc",
+                    "@com_github_grpc_grpc_swift//:protoc-gen-grpc-swift",
                 ),
                 executable = True,
             ),
